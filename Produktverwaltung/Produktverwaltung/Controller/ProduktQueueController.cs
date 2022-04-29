@@ -1,6 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿#nullable disable
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Produktverwaltung.Models;
 
 namespace Produktverwaltung.Controller
 {
@@ -8,36 +15,119 @@ namespace Produktverwaltung.Controller
     [ApiController]
     public class ProduktQueueController : ControllerBase
     {
-        // GET: api/<ProduktQueueController>
+        private readonly ProduktContext _context;
+
+        public ProduktQueueController(ProduktContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/ProduktQueue
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<Produkt>>> GetProdukte()
         {
-            return new string[] { "value1", "value2" };
+            return await _context.Produkte.ToListAsync();
         }
 
-        // GET api/<ProduktQueueController>/5
+        // GET: api/ProduktQueue/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Produkt>> GetProdukt(long id)
         {
-            return "value";
+            var produkt = await _context.Produkte.FindAsync(id);
+
+            if (produkt == null)
+            {
+                return NotFound();
+            }
+
+            return produkt;
         }
 
-        // POST api/<ProduktQueueController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<ProduktQueueController>/5
+        // PUT: api/ProduktQueue/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> PutProdukt(long id, Produkt produkt)
         {
+            if (id != produkt.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(produkt).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProduktExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // DELETE api/<ProduktQueueController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // POST: api/ProduktQueue
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Produkt>> PostProdukt(Produkt produkt)
         {
+            Bitmap img = new Bitmap(1, 1);
+            Graphics g = Graphics.FromImage(img);
+
+            // The font for our text
+            Font f = new Font("Arial", 14);
+
+            // work out how big the text will be when drawn as an image
+            SizeF size = g.MeasureString(produkt.Name, f);
+
+            // create a new Bitmap of the required size
+            img = new Bitmap((int)Math.Ceiling(size.Width), (int)Math.Ceiling(size.Height));
+            g = Graphics.FromImage(img);
+
+            // give it a white background
+            g.Clear(Color.White);
+
+            // draw the text in black
+            g.DrawString(produkt.Name, f, Brushes.Black, 0, 0);
+
+            // save the image
+            //ToDo
+            //img.Save(@"D:\GitHub\CC2022\Produktverwaltung\Produktverwaltung\Hello.jpg");
+
+
+            _context.Produkte.Add(produkt);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetProdukt", new { id = produkt.Id }, produkt);
+        }
+
+        // DELETE: api/ProduktQueue/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProdukt(long id)
+        {
+            var produkt = await _context.Produkte.FindAsync(id);
+            if (produkt == null)
+            {
+                return NotFound();
+            }
+
+            _context.Produkte.Remove(produkt);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool ProduktExists(long id)
+        {
+            return _context.Produkte.Any(e => e.Id == id);
         }
     }
 }
