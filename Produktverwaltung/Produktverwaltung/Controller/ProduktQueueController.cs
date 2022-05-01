@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Produktverwaltung.Helper;
 using Produktverwaltung.Models;
 
 namespace Produktverwaltung.Controller
@@ -16,10 +17,14 @@ namespace Produktverwaltung.Controller
     public class ProduktQueueController : ControllerBase
     {
         private readonly ProduktContext _context;
+        private readonly IConfiguration Configuration;
+        private readonly ILogger<ProdukteBaseController> _logger;
 
-        public ProduktQueueController(ProduktContext context)
+        public ProduktQueueController(ProduktContext context, IConfiguration configuration, ILogger<ProdukteBaseController> logger)
         {
             _context = context;
+            Configuration = configuration;
+            _logger = logger;
         }
 
         // GET: api/ProduktQueue
@@ -79,6 +84,9 @@ namespace Produktverwaltung.Controller
         [HttpPost]
         public async Task<ActionResult<Produkt>> PostProdukt(Produkt produkt)
         {
+            _context.Produkte.Add(produkt);
+            await _context.SaveChangesAsync();
+
             Bitmap img = new Bitmap(1, 1);
             Graphics g = Graphics.FromImage(img);
 
@@ -98,13 +106,16 @@ namespace Produktverwaltung.Controller
             // draw the text in black
             g.DrawString(produkt.Name, f, Brushes.Black, 0, 0);
 
-            // save the image
-            //ToDo
-            //img.Save(@"D:\GitHub\CC2022\Produktverwaltung\Produktverwaltung\Hello.jpg");
+            img.Save(@$".\{produkt.Name}.jpg");
 
+            BlobHelper bHelper = new BlobHelper(Configuration);
 
-            _context.Produkte.Add(produkt);
-            await _context.SaveChangesAsync();
+            QueueHelper qHelper = new QueueHelper(Configuration);
+
+            bHelper.UploadDataToBlobContainer(Environment.CurrentDirectory, produkt.Name, "images");
+
+            qHelper.CreateQueue("produkte");
+            qHelper.InsertMessage("produkte", $"{produkt.Id} {produkt.Name} {produkt.Price} {produkt.Name}.jpg");
 
             return CreatedAtAction("GetProdukt", new { id = produkt.Id }, produkt);
         }

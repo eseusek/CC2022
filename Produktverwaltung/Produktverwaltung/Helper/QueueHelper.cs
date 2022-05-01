@@ -6,14 +6,12 @@ namespace Produktverwaltung.Helper
     public class QueueHelper
     {
         private readonly IConfiguration Configuration;
-        private readonly ILogger<QueueHelper> _logger;
         string connectionString;
 
-        public QueueHelper(IConfiguration configuration, ILogger<QueueHelper> logger)
+        public QueueHelper(IConfiguration configuration)
         {
             Configuration = configuration;
-            _logger = logger;
-            connectionString = Configuration["StorageConnectionString"]; ;
+            connectionString = Configuration["StorageConnectionString"];
         }
 
         public void CreateQueueClient(string queueName)
@@ -34,19 +32,15 @@ namespace Produktverwaltung.Helper
 
                 if (queueClient.Exists())
                 {
-                    _logger.LogInformation($"Queue created: '{queueClient.Name}'");
                     return true;
                 }
                 else
                 {
-                    _logger.LogInformation($"Make sure the Azurite storage emulator running and try again.");
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"Exception: {ex.Message}\n\n");
-                _logger.LogInformation($"Make sure the Azurite storage emulator running and try again.");
                 return false;
             }
         }
@@ -65,7 +59,6 @@ namespace Produktverwaltung.Helper
                 queueClient.SendMessage(message);
             }
 
-            Console.WriteLine($"Inserted: {message}");
         }
 
         public void PeekMessage(string queueName)
@@ -79,7 +72,6 @@ namespace Produktverwaltung.Helper
                 PeekedMessage[] peekedMessage = queueClient.PeekMessages();
 
                 // Display the message
-                Console.WriteLine($"Peeked message: '{peekedMessage[0].Body}'");
             }
         }
 
@@ -97,7 +89,7 @@ namespace Produktverwaltung.Helper
                 queueClient.UpdateMessage(message[0].MessageId,
                         message[0].PopReceipt,
                         "Updated contents",
-                        TimeSpan.FromSeconds(60.0)  // Make it invisible for another 60 seconds
+                        TimeSpan.FromSeconds(10.0)  // Make it invisible for another 60 seconds
                     );
             }
         }
@@ -113,7 +105,6 @@ namespace Produktverwaltung.Helper
                 QueueMessage[] retrievedMessage = queueClient.ReceiveMessages();
 
                 // Process (i.e. print) the message in less than 30 seconds
-                Console.WriteLine($"Dequeued message: '{retrievedMessage[0].Body}'");
 
                 // Delete the message
                 queueClient.DeleteMessage(retrievedMessage[0].MessageId, retrievedMessage[0].PopReceipt);
