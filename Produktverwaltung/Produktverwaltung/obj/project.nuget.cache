@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "uVis+QyaJeIqvxxqSYqwyTAyo6bWjPvvjf3Lwjlc+UyYXVdxKzC0arVl+tFD3UZxT0ik3GI8bDXsdf/0+rcUYA==",
+  "dgSpecHash": "xFDkVYah2O5DH/wniHuAAsNHdQOju+yQSHErLJGuMasr/1zUuDug5XMjTFGE58Wg9YjEou5WXqoFmJneJ12sfA==",
   "success": true,
   "projectFilePath": "D:\\GitHub\\CC2022\\Produktverwaltung\\Produktverwaltung\\Produktverwaltung.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Manu\\.nuget\\packages\\azure.core\\1.22.0\\azure.core.1.22.0.nupkg.sha512",
+    "C:\\Users\\Manu\\.nuget\\packages\\azure.data.tables\\12.5.0\\azure.data.tables.12.5.0.nupkg.sha512",
     "C:\\Users\\Manu\\.nuget\\packages\\azure.storage.blobs\\12.11.0\\azure.storage.blobs.12.11.0.nupkg.sha512",
     "C:\\Users\\Manu\\.nuget\\packages\\azure.storage.common\\12.10.0\\azure.storage.common.12.10.0.nupkg.sha512",
     "C:\\Users\\Manu\\.nuget\\packages\\azure.storage.queues\\12.9.0\\azure.storage.queues.12.9.0.nupkg.sha512",

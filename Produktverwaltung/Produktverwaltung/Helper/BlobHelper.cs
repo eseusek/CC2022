@@ -15,15 +15,6 @@ namespace Produktverwaltung.Helper
             blobServiceClient = new BlobServiceClient(connectionString);
         }
 
-        public void CreateBlobContainer()
-        {
-            //Create a unique name for the container
-            string containerName = "quickstartblobs" + Guid.NewGuid().ToString();
-
-            // Create the container and return a container client object
-            blobServiceClient.CreateBlobContainer(containerName);
-        }
-
         public BlobContainerClient GetOrCreateBlobContainer(string blobContainerName)
         {
             var blobContainerClient = blobServiceClient.GetBlobContainerClient(blobContainerName);
@@ -38,7 +29,7 @@ namespace Produktverwaltung.Helper
             }
         }
 
-        public bool UploadDataToBlobContainer(string localPath, string fileName, string blobContainerName)
+        public void UploadDataToBlobContainer(string localPath, string fileName, string blobContainerName)
         {
             string localFilePath = Path.Combine(localPath, fileName + ".jpg");
 
@@ -52,15 +43,8 @@ namespace Produktverwaltung.Helper
             }
             catch (Exception e)
             {
-                return false;
+                
             }
-
-            return true;
-        }
-
-        public void DownloadBlobToFile(string blobContainerName, string blobName, string localFile)
-        {
-            GetOrCreateBlobContainer(blobContainerName).GetBlobClient(blobName).DownloadTo(localFile);
         }
     }
 }

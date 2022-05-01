@@ -20,6 +20,19 @@
           "lib/net5.0/Azure.Core.dll": {}
         }
       },
+      "Azure.Data.Tables/12.5.0": {
+        "type": "package",
+        "dependencies": {
+          "Azure.Core": "1.22.0",
+          "System.Text.Json": "4.7.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/Azure.Data.Tables.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Azure.Data.Tables.dll": {}
+        }
+      },
       "Azure.Storage.Blobs/12.11.0": {
         "type": "package",
         "dependencies": {
@@ -3255,6 +3268,22 @@
         "lib/netcoreapp2.1/Azure.Core.xml",
         "lib/netstandard2.0/Azure.Core.dll",
         "lib/netstandard2.0/Azure.Core.xml"
+      ]
+    },
+    "Azure.Data.Tables/12.5.0": {
+      "sha512": "XeIxPf+rF1NXkX3NJSB0ZTNgU233vyPXGmaFsR0lUVibtWP/lj+Qu1FcPxoslURcX0KC+UgTb226nqVdHjoweQ==",
+      "type": "package",
+      "path": "azure.data.tables/12.5.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "CHANGELOG.md",
+        "README.md",
+        "azure.data.tables.12.5.0.nupkg.sha512",
+        "azure.data.tables.nuspec",
+        "azureicon.png",
+        "lib/netstandard2.0/Azure.Data.Tables.dll",
+        "lib/netstandard2.0/Azure.Data.Tables.xml"
       ]
     },
     "Azure.Storage.Blobs/12.11.0": {
@@ -9943,6 +9972,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "Azure.Data.Tables >= 12.5.0",
       "Azure.Storage.Blobs >= 12.11.0",
       "Azure.Storage.Queues >= 12.9.0",
       "Microsoft.EntityFrameworkCore.InMemory >= 6.0.3",
@@ -9993,6 +10023,10 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "Azure.Data.Tables": {
+            "target": "Package",
+            "version": "[12.5.0, )"
+          },
           "Azure.Storage.Blobs": {
             "target": "Package",
             "version": "[12.11.0, )"

@@ -12,6 +12,6 @@
     <WebStackScaffolding_LayoutPageFile />
     <WebStackScaffolding_DbContextTypeFullName>Produktverwaltung.Models.ProduktContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
-    <NameOfLastUsedPublishProfile>D:\FH\Produktverwaltung\Produktverwaltung\Properties\PublishProfiles\Produktverwaltungsservice - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>D:\GitHub\CC2022\Produktverwaltung\Produktverwaltung\Properties\PublishProfiles\Produktverwaltungsservice - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
