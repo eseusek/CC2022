@@ -1,9 +1,9 @@
+using System;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Produktverwaltung.Models;
-using System;
 
-namespace QueueTriggerFunction
+namespace ProductsQueueTrigger
 {
     public class ExpensiveProduct
     {
@@ -12,13 +12,11 @@ namespace QueueTriggerFunction
         public string Text { get; set; }
     }
 
-    public static class ProductsQueueTrigger
+    public class ProductsQueueTriggerFunction
     {
-        [FunctionName("ProductsQueueTrigger")]
+        [FunctionName("ProductsQueueTriggerFunction")]
         [return: Table("ExpensiveProducts")]
-        public static ExpensiveProduct Run(
-            [QueueTrigger("produkte")] string myQueueItem,
-            ILogger log)
+        public ExpensiveProduct Run([QueueTrigger("produkte", Connection = "AzureWebJobsStorage")]string myQueueItem, ILogger log)
         {
             var produkt = Newtonsoft.Json.JsonConvert.DeserializeObject<Produkt>(myQueueItem);
             if (produkt.Price > 100)
