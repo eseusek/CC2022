@@ -1,5 +1,6 @@
 ﻿#nullable disable
 using System.Drawing;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Produktverwaltung.Helper;
@@ -110,7 +111,7 @@ namespace Produktverwaltung.Controller
             bHelper.UploadDataToBlobContainer(Environment.CurrentDirectory, produkt.Name, "images");
 
             qHelper.CreateQueue("produkte");
-            qHelper.InsertMessage("produkte", Newtonsoft.Json.JsonConvert.SerializeObject(produkt));
+            qHelper.InsertMessage("produkte", Convert.ToBase64String(Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(produkt))));
 
             return CreatedAtAction("GetProdukt", new { id = produkt.Id }, produkt);
         }
